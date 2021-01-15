@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/auth";
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 const config = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -7,8 +7,10 @@ const config = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 };
 
-export default function initFirebase() {
+const initFirebase = () => {
   if (!firebase.apps.length) {
     firebase.initializeApp(config);
   }
-}
+};
+
+export default initFirebase;

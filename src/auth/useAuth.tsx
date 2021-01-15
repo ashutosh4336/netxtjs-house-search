@@ -4,22 +4,21 @@ import {
   useContext,
   createContext,
   FunctionComponent,
-} from "react";
-import { useRouter } from "next/router";
-import firebase from "firebase/app";
-import "firebase/auth";
-import initFirebase from "src/auth/initFirebase";
-import { removeTokenCookie, setTokenCookie } from "src/auth/tokenCookies";
+} from 'react';
+import { useRouter } from 'next/router';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import initFirebase from './initFirebase';
+import { IAuthContext } from 'src/interface/User';
+import { removeTokenCookie, setTokenCookie } from './tokenCookies';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 
 initFirebase();
 
-interface IAuthContext {
-  user: firebase.User | null;
-  logout: () => void;
-  authenticated: boolean;
-}
-
-const AuthContext = createContext<IAuthContext>({
+const AuthConetxt = createContext<IAuthContext>({
   user: null,
   logout: () => null,
   authenticated: false,
@@ -29,15 +28,31 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   const [user, setUser] = useState<firebase.User | null>(null);
   const router = useRouter();
 
+  const Toast = MySwal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
   const logout = () => {
     firebase
       .auth()
       .signOut()
       .then(() => {
-        router.push("/");
+        router.push('/');
       })
       .catch((e) => {
         console.error(e);
+        Toast.fire({
+          icon: 'error',
+          title: 'something went wrong',
+        });
       });
   };
 
@@ -61,12 +76,12 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, logout, authenticated: !!user }}>
+    <AuthConetxt.Provider value={{ user, logout, authenticated: !!user }}>
       {children}
-    </AuthContext.Provider>
+    </AuthConetxt.Provider>
   );
 };
 
 export function useAuth() {
-  return useContext(AuthContext);
+  return useContext(AuthConetxt);
 }

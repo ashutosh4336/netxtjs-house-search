@@ -1,5 +1,5 @@
 import { FunctionComponent, Fragment } from 'react';
-import { IProps } from 'src/interface/layout';
+import { IProps } from 'src/interface/Layout';
 import Link from 'next/link';
 
 const Layout: FunctionComponent<IProps> = ({ main }) => {
