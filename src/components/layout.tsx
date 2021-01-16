@@ -1,13 +1,15 @@
 import { FunctionComponent, Fragment } from 'react';
-import { IProps } from 'src/interface/Layout';
 import Link from 'next/link';
+import { IProps } from 'src/interface/Layout';
+import { useAuth } from 'src/auth/useAuth';
 
 const Layout: FunctionComponent<IProps> = ({ main }) => {
-  const authenticated: boolean = false;
+  const { authenticated, logout } = useAuth();
 
-  const logout = () => {
-    return null;
-  };
+  // const authenticated: boolean = false;
+  // const logout = () => {
+  // return null;
+  // };
 
   return (
     <div className="bg-gray-900 max-w-screen-2xl mx-auto text-white">
